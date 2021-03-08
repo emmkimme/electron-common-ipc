@@ -1,4 +1,5 @@
-import { Create as CreateIpcBusClientWindow } from '../renderer/IpcBusClientRenderer-factory';
+import { IpcBusClient } from '../IpcBusClient';
+import { CreateIpcBusClient } from '../IpcBusClient-factory-browser';
 import { ActivateIpcBusTrace, ActivateServiceTrace } from '../IpcBusUtils';
 
 import { CreateIpcBusService } from '../service/IpcBusService-factory';
@@ -14,38 +15,13 @@ try {
 catch (err) {
 }
 
-const trace = false; // true;
-
 export function CreateGlobal(): ElectronCommonIpcAPI {
-    const ipcWindow = electron?.ipcRenderer;
     return {
         ActivateIpcBusTrace,
         ActivateServiceTrace,
-        CreateIpcBusClient: () => {
-            if (ipcWindow) {
-                trace && console.log(`${ElectronCommonIpcAPI}.CreateIpcBusClient`);
-                const ipcBusClient = CreateIpcBusClientWindow('renderer', (window.self === window.top), ipcWindow);
-                // This instance may be proxyfied and then loose property members
-                return ipcBusClient;
-            }
-            else {
-                console.error(`${ElectronCommonIpcAPI}.CreateIpcBusClient - not properly initialized`);
-                return null;
-            }
-        },
+        CreateIpcBusClient,
         IpcBusClient: {
-            Create: () => {
-                if (ipcWindow) {
-                    trace && console.log(`${ElectronCommonIpcAPI}.CreateIpcBusClient`);
-                    const ipcBusClient = CreateIpcBusClientWindow('renderer', (window.self === window.top), ipcWindow);
-                    // This instance may be proxyfied and then loose property members
-                    return ipcBusClient;
-                }
-                else {
-                    console.error(`${ElectronCommonIpcAPI}.CreateIpcBusClient - not properly initialized`);
-                    return null;
-                }
-            }
+            Create: IpcBusClient.Create
         },
         CreateIpcBusService,
         IpcBusService: {

@@ -13,9 +13,9 @@ import { ElectronCommonIpcAPI, GetElectronCommonIpcAPI } from './IpcBusNamespace
 
 export function CreateGlobal() {
     return {
-        CreateIpcBusClient,
         ActivateIpcBusTrace,
         ActivateServiceTrace,
+        CreateIpcBusClient,
         IpcBusClient: {
             Create: IpcBusClient.Create
         },
